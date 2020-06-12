@@ -29,7 +29,6 @@ class MusicAdapter3(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.element_music2, parent, false)
-        context = parent.context
         return MusicViewHolder(view)
     }
 
@@ -40,7 +39,7 @@ class MusicAdapter3(
 
         Glide.with(context).asBitmap()
             .load(Constants.songImage)
-            .apply(RequestOptions().override(100,100))
+            .apply(RequestOptions().override(100, 100))
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .skipMemoryCache(true)
             .into(holder.image)

@@ -4,7 +4,10 @@ package `in`.music.activity
 
 import `in`.music.R
 import `in`.music.databinding.ActivityMain2Binding
-import `in`.music.extras.*
+import `in`.music.extras.CallBackListener
+import `in`.music.extras.Coroutines
+import `in`.music.extras.MusicAdapter
+import `in`.music.extras.MusicFactory
 import `in`.music.repository.MusicRepository
 import `in`.music.viewmodel.MusicViewModel
 import android.os.Bundle
@@ -13,14 +16,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity(), CallBackListener {
 
     private lateinit var binding : ActivityMain2Binding
-    private lateinit var musicAdapter2: MusicAdapter3
     private lateinit var musicViewModel: MusicViewModel
     private lateinit var musicAdapter: MusicAdapter
 
@@ -32,23 +32,11 @@ class MainActivity : AppCompatActivity(), CallBackListener {
         val musicFactory = MusicFactory(repository)
         musicViewModel = ViewModelProviders.of(this,musicFactory).get(MusicViewModel::class.java)
 
-        musicAdapter2 = MusicAdapter3(this)
-        binding.hRcv.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,false)
+        musicAdapter = MusicAdapter(this,this)
+        binding.hRcv.layoutManager = LinearLayoutManager(this)
         binding.hRcv.setHasFixedSize(true)
-        binding.hRcv.adapter = musicAdapter2
+        binding.hRcv.adapter = musicAdapter
         binding.hRcv.setItemViewCacheSize(20)
-
-        musicViewModel.getHorizontalList(this,this).observe(this, Observer {list ->
-            if (list != null){
-                musicAdapter2.submitList(list)
-                musicAdapter2.notifyDataSetChanged()
-            }
-        })
-
-        musicAdapter = MusicAdapter(this)
-        binding.vRcv.layoutManager = GridLayoutManager(this,3)
-        binding.vRcv.adapter = musicAdapter
-        binding.vRcv.setItemViewCacheSize(20)
 
         musicViewModel.getMusicList(this,this).observe(this, Observer {list2 ->
             if (list2 != null){
